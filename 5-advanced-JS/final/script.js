@@ -19,6 +19,7 @@ Person.prototype.calculateAge  = function() {
 
 Person.prototype.lastName = 'Smith';
 
+// This is called instantiation
 var john = new Person('John', 1990, 'teacher');
 var jane = new Person('Jane', 1969, 'designer');
 var mark = new Person('Mark', 1948, 'retired');
@@ -473,3 +474,201 @@ c) correct answer (I would use a number for this)
     
 })();
 */
+
+// Caner trials below!!!!
+/*
+console.log("Hi");
+
+var Insan = function (name, byear){
+    this.name = name;
+    this.yearOfBirth = byear;
+    this.calculateAge = function () {
+        console.log(2019 - this.yearOfBirth);
+    }
+}
+Insan.prototype.lastName = "sukru"
+// Insan.prototype.calculateAge = function () {
+//     console.log(2019 - this.yearOfBirth);
+// }
+
+var caner = new Insan("osman", "1989");
+// console.log(caner);
+
+console.log(caner.name);
+
+
+
+var personProto = {
+    calculateAge: function() {
+        console.log(2016 - this.yearOfBirth);
+    }
+};
+
+var john = Object.create(personProto);
+john.name = 'John';
+john.yearOfBirth = 1990;
+john.job = 'teacher';
+
+var jane = Object.create(personProto, {
+    name: { value: 'Jane' },
+    yearOfBirth: { value: 1969 },
+    job: { value: 'designer' }
+});
+
+
+// Trying Closures
+
+function retirement(retirementAge) {
+    var a = ' years left until retirement.';
+    // return function(yearOfBirth) {
+    //     console.log(a)
+    //     //var age = 2016 - yearOfBirth;
+    //     //console.log((retirementAge - age) + a);
+    // }
+    return function(yearOfBirth) {
+        console.log(a)
+        //var age = 2016 - yearOfBirth;
+        //console.log((retirementAge - age) + a);
+    }
+}
+
+var retirementUS = retirement(66);
+var retirementGermany = retirement(65);
+var retirementIceland = retirement(67);
+
+retirementUS(1990);
+//retirementUS(1990);
+//retirementIceland(1990);
+
+
+
+
+
+/*
+--- Let's build a fun quiz game in the console! ---
+
+1. Build a function constructor called Question to describe a question. A question should include:
+a) question itself
+b) the answers from which the player can choose the correct one (choose an adequate data structure here, array, object, etc.)
+c) correct answer (I would use a number for this)
+
+2. Create a couple of questions using the constructor
+
+3. Store them all inside an array
+
+4. Select one random question and log it on the console, together with the possible answers (each question should have a number) (Hint: write a method for the Question objects for this task).
+
+5. Use the 'prompt' function to ask the user for the correct answer. The user should input the number of the correct answer such as you displayed it on Task 4.
+
+6. Check if the answer is correct and print to the console whether the answer is correct ot nor (Hint: write another method for this).
+
+7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
+*/
+
+/*
+function Question (question, answers, correctanswer) {
+    this.question = question;
+    this.answers = answers;
+    this.correctanswer = correctanswer;
+    }
+
+var testQuestion = new Question("what is my name", "caner, hamdi", "caner");
+var testQuestion2 = new Question("who is in the project", "mert, halil sukru", "mert");
+
+sampleQuestions = [testQuestion, testQuestion2]
+
+//console.log(sampleQuestions);
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var randomQ = getRandomInt(0,1);
+
+//console.log(sampleQuestions[randomQ]);
+
+var answer = parseInt(prompt('Please select the correct answer.'));
+console.log(answer);
+*/
+
+
+
+(function() {
+    function Question(question, answers, correct) {
+        this.question = question;
+        this.answers = answers;
+        this.correct = correct;
+    }
+
+    Question.prototype.displayQuestion = function() {
+        console.log(this.question);
+
+        for (var i = 0; i < this.answers.length; i++) {
+            console.log(i + ': ' + this.answers[i]);
+        }
+    }
+
+    Question.prototype.checkAnswer = function(ans, callback) {
+        var sc;
+        
+        if (ans === this.correct) {
+            console.log('Correct answer!');
+            sc = callback(true);
+        } else {
+            console.log('Wrong answer. Try again :)');
+            sc = callback(false);
+        }
+        
+        this.displayScore(sc);
+    }
+
+    Question.prototype.displayScore = function(score) {
+        console.log('Your current score is: ' + score);
+        console.log('------------------------------');
+    }
+    
+    
+    var q1 = new Question('Is JavaScript the coolest programming language in the world?',
+                          ['Yes', 'No'],
+                          0);
+
+    var q2 = new Question('What is the name of this course\'s teacher?',
+                          ['John', 'Micheal', 'Jonas'],
+                          2);
+
+    var q3 = new Question('What does best describe coding?',
+                          ['Boring', 'Hard', 'Fun', 'Tediuos'],
+                          2);
+    
+    var questions = [q1, q2, q3];
+    
+    function score() {
+        var sc = 0;
+        return function(correct) {
+            if (correct) {
+                sc++;
+            }
+            return sc;
+        }
+    }
+    var keepScore = score();
+    
+    
+    function nextQuestion() {
+
+        var n = Math.floor(Math.random() * questions.length);
+        questions[n].displayQuestion();
+
+        var answer = prompt('Please select the correct answer.');
+
+        if(answer !== 'exit') {
+            questions[n].checkAnswer(parseInt(answer), keepScore);
+            
+            nextQuestion();
+        }
+    }
+    
+    nextQuestion();
+    
+})();
